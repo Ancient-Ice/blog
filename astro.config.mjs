@@ -1,7 +1,6 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://ancient-ice.github.io',
-  base: '/blog',
+  site: 'https://blog.429.one',
   build: { inlineStylesheets: 'always' },
 });

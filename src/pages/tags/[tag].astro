@@ -10,7 +10,7 @@ export async function getStaticPaths() {
 const { tag, posts } = Astro.props;
 ---
 <Page title={tag} description={tag + ' 相关教程'}>
-  <a href="/blog/">← 全部教程</a>
+  <a href="/">← 全部教程</a>
   <h1>{tag}</h1>
   {posts.map(post => <Entry post={post} />)}
 </Page>

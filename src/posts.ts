@@ -5,4 +5,4 @@ export async function publishedPosts() {
   return posts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 }
 
-export const tagPath = (tag: string) => '/blog/tags/' + encodeURIComponent(tag) + '/';
+export const tagPath = (tag: string) => '/tags/' + encodeURIComponent(tag) + '/';
