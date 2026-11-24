@@ -4,7 +4,7 @@ import Entry from '../components/Entry.astro';
 import { publishedPosts } from '../posts';
 const posts = await publishedPosts();
 ---
-<Page title="教程笔记" description="Ancient Ice 的工具使用指南与开发笔记">
+<Page title="教程笔记" description="429ONE Blog 的工具使用指南与开发笔记">
   <h1>教程笔记</h1>
   {posts.map(post => <Entry post={post} />)}
 </Page>
