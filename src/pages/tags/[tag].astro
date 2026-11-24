@@ -1,0 +1,16 @@
+---
+import Page from '../../layouts/Page.astro';
+import Entry from '../../components/Entry.astro';
+import { publishedPosts } from '../../posts';
+export async function getStaticPaths() {
+  const posts = await publishedPosts();
+  const tags = [...new Set(posts.flatMap(post => post.data.tags))];
+  return tags.map(tag => ({ params: { tag }, props: { tag, posts: posts.filter(post => post.data.tags.includes(tag)) } }));
+}
+const { tag, posts } = Astro.props;
+---
+<Page title={tag} description={tag + ' 相关教程'}>
+  <a href="/blog/">← 全部教程</a>
+  <h1>{tag}</h1>
+  {posts.map(post => <Entry post={post} />)}
+</Page>

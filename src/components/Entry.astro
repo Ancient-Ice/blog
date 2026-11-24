@@ -1,0 +1,11 @@
+---
+import { tagPath } from '../posts';
+const { post } = Astro.props;
+const date = post.data.pubDate.toISOString().slice(0,10);
+---
+<section class="entry">
+  <time datetime={date}>{date}</time>
+  <h2><a href={'/blog/posts/' + post.id + '/'}>{post.data.title}</a></h2>
+  <p>{post.data.description}</p>
+  <div class="tags">{post.data.tags.map((tag: string) => <a href={tagPath(tag)}>{tag}</a>)}</div>
+</section>

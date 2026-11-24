@@ -1,0 +1,20 @@
+---
+import { render } from 'astro:content';
+import Page from '../../layouts/Page.astro';
+import { publishedPosts, tagPath } from '../../posts';
+export async function getStaticPaths() {
+  return (await publishedPosts()).map(post => ({ params: { id: post.id }, props: { post } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+const date = post.data.pubDate.toISOString().slice(0,10);
+---
+<Page title={post.data.title} description={post.data.description}>
+  <article>
+    <a href="/blog/">← 教程笔记</a>
+    <h1>{post.data.title}</h1>
+    <time datetime={date}>{date}</time>
+    <div class="tags">{post.data.tags.map(tag => <a href={tagPath(tag)}>{tag}</a>)}</div>
+    <div class="body"><Content /></div>
+  </article>
+</Page>
