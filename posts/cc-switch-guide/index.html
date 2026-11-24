@@ -1,0 +1,52 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="从安装 CC Switch 开始，添加一套供应商配置，在 Claude Code 中验证第一次请求，再切回官方登录。"><title>CC Switch 使用指南：给 Claude Code 换一个模型供应商 · Ancient Ice</title><style>:root{color-scheme:light;--ink:#173c3b;--leaf:#246959;--line:#c7d7cd}*{box-sizing:border-box}body{color:var(--ink);background:#fafaf5;margin:0;font:17px/1.85 "Source Sans 3",system-ui,sans-serif}header{border-bottom:1px solid var(--line);padding:16px max(6vw,50vw - 510px)}header a{white-space:nowrap;align-items:center;gap:12px;font:700 26px Georgia,serif;text-decoration:none;display:inline-flex}header i{background:var(--ink);color:#e7f0dd;border-radius:50%;place-items:center;width:38px;height:38px;font-style:normal;display:grid}main{max-width:910px;margin:clamp(36px,7vw,85px) auto;padding:0 24px}h1,h2,h3{text-wrap:balance;font-family:Georgia,Songti SC,Noto Serif CJK SC,serif;line-height:1.4}h1{letter-spacing:-.04em;margin:15px 0 22px;font-size:clamp(34px,6vw,60px)}a{color:var(--leaf);text-underline-offset:4px}a:hover{color:#102e2d}time,.meta{color:#536a62;font-size:.88rem}.tags{flex-wrap:wrap;gap:10px;display:flex}.tags a{background:#e7eee3;border-radius:3px;padding:2px 9px;font-size:.85rem;text-decoration:none}.entry{border-top:1px solid var(--line);padding:26px 0}.entry h2{margin:8px 0}.entry h2 a{color:var(--ink);text-decoration:none}.entry h2 a:hover{text-decoration:underline}article{overflow-wrap:anywhere;max-width:740px;margin:auto}article h1{font-size:clamp(30px,5vw,47px)}.body{border-top:1px solid var(--line);margin-top:32px;padding-top:12px}.body h2{margin:1.8em 0 .6em}.body pre,.body blockquote{border-radius:4px;margin:1em 0;padding:14px 20px}.body pre{overflow:auto}.body blockquote{border-left:3px solid var(--leaf);background:#e9efe5}blockquote p{margin:0}.body table{border-collapse:collapse;font-size:.94em;display:block;overflow:auto}th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:10px}img{max-width:100%;height:auto}
+</style></head><body><header><a href="/blog/" aria-label="Ancient Ice 博客首页"><i aria-hidden="true">❄</i> Ancient Ice</a></header><main><article><a href="/blog/">← 教程笔记</a><h1>CC Switch 使用指南：给 Claude Code 换一个模型供应商</h1><time datetime="2026-11-24">2026-11-24</time><div class="tags"><a href="/blog/tags/CC%20Switch/">CC Switch</a><a href="/blog/tags/Claude%20Code/">Claude Code</a></div><div class="body"><p>假设你平时用 Claude 官方账号写代码，今天想在同一个终端里试试另一家供应商提供的模型。两边的登录方式、接口地址和模型名称可能都不同。试用结束后，你还得记得怎么切回来。CC Switch 就是为这种场景准备的。</p>
+<h2 id="cc-switch-是什么">CC Switch 是什么？</h2>
+<p>CC Switch 是一个开源桌面应用，可以管理 Claude Code、Codex、Gemini CLI 等工具的配置。你可以把里面的一张「供应商」卡片理解为一套连接设置：请求发到哪里、用什么凭据、调用哪个模型。</p>
+<p>本文用 <strong>CC Switch v4.0.40、Claude Code 和直连模式</strong>走一遍完整流程。在这个模式下，点击「切换」，CC Switch 会把所选配置写进 Claude Code；下次提问时，Claude Code 直接向供应商发送请求。模型访问权限、额度和计费由你选择的供应商提供。</p>
+<h2 id="1-安装并确认两个工具都能打开">1. 安装，并确认两个工具都能打开</h2>
+<p>从官方发布页选择与你的系统和处理器架构匹配的安装包。Windows 下载 <code>.msi</code> 并运行；macOS 下载 <code>.dmg</code>，打开后把应用拖进「应用程序」；Ubuntu 或 Debian 下载 <code>.deb</code>，用系统的软件安装器打开。安装完成后，启动 CC Switch。<a href="https://github.com/farion1231/cc-switch/releases/tag/v4.0.40">官方安装包</a></p>
+<p>在你准备使用 Claude Code 的终端运行：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="shell"><code><span class="line"><span style="color:#B392F0">claude</span><span style="color:#79B8FF"> --version</span></span></code></pre>
+<p>看到版本号就可以继续。如果提示找不到命令，打开 CC Switch 左侧栏底部的「应用」，找到 <strong>Claude Code</strong>，点击安装。完成后新开一个终端，再运行一次上面的命令。</p>
+<h2 id="2-添加第一张供应商卡片">2. 添加第一张供应商卡片</h2>
+<p>先在供应商控制台准备一枚可用的 API Key，并确认该套餐支持 <strong>Claude Code 直连</strong>。如果同一家提供按量 API 和单独的编程套餐，记下密钥属于哪一种，下一步要选对应的预设。</p>
+<ol>
+<li>在 CC Switch 左侧选 <strong>Claude Code</strong>，打开「直连」页。</li>
+<li>点击右上角的 <strong>＋</strong>，在「预设供应商」里搜索供应商名称。比如你的密钥来自智谱，就搜索「智谱」，再核对套餐和地区。</li>
+<li>选中匹配的预设，保留预设填好的端点地址，在 <strong>API Key</strong> 一栏粘贴密钥。若需要填写模型名，照供应商文档复制你有权调用的模型 ID。</li>
+<li>点击「添加」。回到列表后，找到刚添加的卡片，点击「切换」，确认卡片显示 <strong>「使用中」</strong>。</li>
+</ol>
+<p>如果卡片标有「需要路由」，说明这套配置需要 CC Switch 在本机转发请求。要跟着本文验证直连，请选用供应商明确列为支持 Claude Code 直连的预设。密钥只填在本机配置中，分享截图时记得遮住它。</p>
+<h2 id="3-发一次请求确认切换成功">3. 发一次请求，确认切换成功</h2>
+<p>打开终端，运行 <code>claude</code>。在 Claude Code 的对话框里输入：</p>
+<blockquote>
+<p>请只回复「连接成功」。</p>
+</blockquote>
+<p>收到正常回答，说明客户端能完成一次模型请求。要进一步确认<strong>这次请求用了刚选的供应商</strong>，打开该供应商控制台的调用记录，核对刚才的时间和模型。如果控制台只展示汇总用量，等它刷新后再查看。模型在回答里自报的名称不能验证请求发到了哪里。</p>
+<h2 id="4-切回原来的配置">4. 切回原来的配置</h2>
+<p>回到 CC Switch 的 <strong>Claude Code → 直连</strong>，找到之前使用的卡片，点击「切换」。如果你原来用的是 Claude 官方账号，就选 <strong>Claude Official</strong>。重新打开 Claude Code，按提示完成官方登录。以后在这两套配置之间切换时，可以直接复用已保存的卡片。</p>
+<h2 id="如果第一条请求失败">如果第一条请求失败</h2>
+<table>
+<thead>
+<tr>
+<th>你看到的现象</th>
+<th>先检查什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>卡片显示「使用中」，请求却返回 401</td>
+<td>卡片状态表示已选中配置。检查密钥是否有效，以及密钥所属套餐、地区是否与预设一致。</td>
+</tr>
+<tr>
+<td>返回「模型不存在」或「无权访问模型」</td>
+<td>到供应商控制台核对账号可用的模型 ID，再回到卡片编辑模型名。</td>
+</tr>
+<tr>
+<td>切换后似乎仍连到旧地址</td>
+<td>检查终端启动配置里是否还设置了旧的 <code>ANTHROPIC_BASE_URL</code> 或认证变量。确认是旧配置后移除对应设置，新开终端再试。</td>
+</tr>
+</tbody>
+</table>
+<p>本文的界面名称和操作顺序依据 v4.0.40 中文手册整理。<a href="https://github.com/farion1231/cc-switch/blob/v4.0.40/docs/user-manual/zh/1-getting-started/1.4-quickstart.md">快速上手</a> · <a href="https://github.com/farion1231/cc-switch/blob/v4.0.40/docs/user-manual/zh/2-providers/2.2-switch.md">切换供应商</a></p>
+</div></article></main></body></html>
