@@ -1,0 +1,144 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="电脑选哪个安装包？安卓手机怎样启动本机引擎？一步步装好 DSH，选中模型，再用一张购物清单完成第一次练习。"><title>第一次用 DeepSeek Harness 和 DSH Go：从下载安装到收到第一条回复 · 429ONE Blog</title><style>:root{color-scheme:light;--ink:#173c3b;--leaf:#246959;--line:#c7d7cd}*{box-sizing:border-box}body{color:var(--ink);background:#fafaf5;margin:0;font:17px/1.85 "Source Sans 3",system-ui,sans-serif}header{border-bottom:1px solid var(--line);padding:16px max(6vw,50vw - 510px)}header a{white-space:nowrap;font:700 26px Georgia,serif;text-decoration:none;display:inline-block}main{max-width:910px;margin:clamp(36px,7vw,85px) auto;padding:0 24px}h1,h2,h3{text-wrap:balance;font-family:Georgia,Songti SC,Noto Serif CJK SC,serif;line-height:1.4}h1{letter-spacing:-.04em;margin:15px 0 22px;font-size:clamp(34px,6vw,60px)}a{color:var(--leaf);text-underline-offset:4px}a:hover{color:#102e2d}time,.meta{color:#536a62;font-size:.88rem}.tags{flex-wrap:wrap;gap:10px;display:flex}.tags a{background:#e7eee3;border-radius:3px;padding:2px 9px;font-size:.85rem;text-decoration:none}.entry{border-top:1px solid var(--line);padding:26px 0}.entry h2{margin:8px 0}.entry h2 a{color:var(--ink);text-decoration:none}.entry h2 a:hover{text-decoration:underline}article{overflow-wrap:anywhere;max-width:740px;margin:auto}article h1{font-size:clamp(30px,5vw,47px)}.body{border-top:1px solid var(--line);margin-top:32px;padding-top:12px}.body h2{margin:1.8em 0 .6em}.body pre,.body blockquote{border-radius:4px;margin:1em 0;padding:14px 20px}.body pre{overflow:auto}.body blockquote{border-left:3px solid var(--leaf);background:#e9efe5}blockquote p{margin:0}.body table{border-collapse:collapse;font-size:.94em;display:block;overflow:auto}th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:10px}img{max-width:100%;height:auto}
+</style></head><body><header><a href="/" aria-label="429ONE Blog 博客首页">429ONE Blog</a></header><main><article><a href="/">← 教程笔记</a><h1>第一次用 DeepSeek Harness 和 DSH Go：从下载安装到收到第一条回复</h1><time datetime="2026-11-25">2026-11-25</time><div class="tags"><a href="/tags/DeepSeek%20Harness/">DeepSeek Harness</a><a href="/tags/DSH%20Go/">DSH Go</a><a href="/tags/%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/">入门教程</a></div><div class="body"><p>假设你手里有一张购物清单，想让 AI 帮你找出还没买的东西。用电脑时，你可以让它读取指定文件夹里的清单；用手机时，也可以把清单贴进聊天框直接问。下面从下载软件开始，做到这件事就算入门。<strong>手里只有一台设备也能跟着做，只读对应的那一节就好。</strong></p>
+<h2 id="dsh-和-dsh-go-分别是什么">DSH 和 DSH Go 分别是什么？</h2>
+<p><strong>DeepSeek Harness</strong> 是 DeepSeek 开发的开源 AI 工具，简称 <strong>DSH</strong>。它负责接收你的问题、连接你选的模型，并在你指定的文件夹里处理任务。<strong>模型</strong>负责读懂问题并生成回答。所以，安装完成能看到聊天窗口，选好可用的模型以后才能收到回复。</p>
+<p><strong>DSH Go</strong> 是社区基于 DeepSeek Harness 开发的手机应用。安卓手机可以自己运行 DSH，也可以连接一台已经运行 DSH 的电脑。本文选「本机」：整套流程用手机就能完成，提问时仍需要联网访问模型。<a href="https://github.com/deepseek-ai/DeepSeek-Harness">DeepSeek Harness 项目</a> · <a href="https://github.com/ccch1mneyyy/dsh-Go">DSH Go 项目</a></p>
+<table>
+<thead>
+<tr>
+<th>你手里的设备</th>
+<th>从哪里开始</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows 电脑或 Mac</td>
+<td><a href="#%E7%94%B5%E8%84%91%E8%B7%AF%E7%BA%BF">电脑：下载安装 DeepSeek Harness</a></td>
+</tr>
+<tr>
+<td>安卓手机</td>
+<td><a href="#%E5%AE%89%E5%8D%93%E8%B7%AF%E7%BA%BF">安卓：下载安装 DSH Go</a></td>
+</tr>
+<tr>
+<td>Linux 电脑</td>
+<td>使用<a href="/posts/relay-deepseek-harness/">浏览器版安装教程</a>，做到页面打开后即可继续选模型</td>
+</tr>
+<tr>
+<td>iPhone</td>
+<td>截至 2026 年 11 月 25 日，DSH Go 项目说明中 iOS 版仍在开发和真机测试，尚无公开安装包。能用电脑的读者可以先走电脑路线</td>
+</tr>
+</tbody>
+</table>
+<h2 id="先决定用什么来回答你的问题">先决定用什么来回答你的问题</h2>
+<p>第一次使用，最省步骤的是在软件里选 <strong>DeepSeek 官方渠道</strong>，按提示登录账号，或填已有的 <strong>DeepSeek API Key</strong>。API Key 是一串让软件以你的账户调用模型的专用密钥。要创建官方 Key，可以在浏览器登录 DeepSeek 开放平台，进入「API keys」页面，创建并复制完整值，保存到自己的密码管理器。模型调用可能产生费用，先查看账户可用额度；网页登录密码只在登录页使用。<a href="https://platform.deepseek.com/api_keys">DeepSeek 开放平台密钥页</a></p>
+<p>如果手里已有 <strong>429ONE 的 Key</strong>，也可以用它做本文的练习。这串 Key 要填进「自定义」渠道，还要准备站点允许调用的模型名称。下文在需要分流的地方给了具体入口。两种方式任选一种即可。</p>
+<p><a id="电脑路线"></a></p>
+<h2 id="电脑下载安装-deepseek-harness">电脑：下载安装 DeepSeek Harness</h2>
+<h3 id="第一步挑对安装包">第一步：挑对安装包</h3>
+<table>
+<thead>
+<tr>
+<th>怎么确认自己的电脑型号</th>
+<th>点哪个下载</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows 打开「设置 → 系统 → 系统信息（关于）」，在「系统类型」里看到「基于 x64 的处理器」</td>
+<td><a href="https://download.deepseek.com/desktop/dsh-latest-windows-x64.exe">Windows x64 安装程序（.exe）</a></td>
+</tr>
+<tr>
+<td>Mac 点屏幕左上角苹果标志 →「关于本机」，「芯片」一栏写着 Apple M 系列</td>
+<td><a href="https://download.deepseek.com/desktop/dsh-latest-macos-arm64.dmg">Apple 芯片版（.dmg）</a></td>
+</tr>
+<tr>
+<td>在「关于本机」看到「处理器」为 Intel</td>
+<td><a href="https://download.deepseek.com/desktop/dsh-latest-macos-x64.dmg">Intel Mac 版（.dmg）</a></td>
+</tr>
+</tbody>
+</table>
+<p>以上是项目发布文档列出的固定下载地址。如果你的 Windows 机器显示 ARM，或者不确定该选哪一项，可改走<a href="/posts/relay-deepseek-harness/">电脑浏览器版教程</a>。<a href="https://github.com/deepseek-ai/DeepSeek-Harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/apps/desktop/publishing/README.zh.md">桌面版发布文档</a></p>
+<h3 id="第二步安装并打开">第二步：安装并打开</h3>
+<ul>
+<li><strong>Windows</strong>：在浏览器下载记录里点开刚下载的 <code>.exe</code>，保留默认安装位置，点「安装」。完成后勾选启动应用，或在开始菜单搜索 <strong>DeepSeek Harness</strong> 打开。</li>
+<li><strong>Mac</strong>：打开访达的「下载」文件夹，双击 <code>.dmg</code>。在弹出的窗口里将应用图标拖到「应用程序」，等复制结束，再到「应用程序」双击 <strong>DeepSeek Harness</strong>。</li>
+</ul>
+<p>看到欢迎页就说明程序已经启动。桌面安装包自带运行环境；走这条路线可以一直用鼠标操作。</p>
+<h3 id="第三步接上模型">第三步：接上模型</h3>
+<ol>
+<li><strong>使用官方账号</strong>：在欢迎页选择登录，按浏览器提示完成授权，然后回到 DeepSeek Harness 窗口。</li>
+<li><strong>如果使用官方 API Key</strong>：在欢迎页选择 API Key 入口，粘贴完整密钥，点「保存并继续」。如果已经进了主界面，也可以在「设置 → 模型」找到 <strong>DeepSeek API</strong> 卡片，填好并保存。</li>
+<li><strong>如果使用 429ONE</strong>：在欢迎页的 API Key 页面点「稍后配置」。进入主界面后打开「设置 → 模型 → 添加模型提供商 → 自定义模型 API」，将基础地址填为 <code>https://api.429.one/v1</code>，再填站点 Key，并按站点支持的协议添加模型。每个字段的示例见<a href="/posts/relay-deepseek-harness/">429ONE 模型配置教程</a>。</li>
+</ol>
+<p>上面三项只做与你手里的账户或 Key 对应的那一项。保存后打开模型选择器，应能看到所选提供商下的模型名称。<a href="https://github.com/deepseek-ai/DeepSeek-Harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/apps/desktop/README.zh.md">桌面欢迎页说明</a></p>
+<h3 id="第四步让它读一张你自己写的清单">第四步：让它读一张你自己写的清单</h3>
+<ol>
+<li>
+<p>在桌面空白处右键新建文件夹，命名为 <code>DSH练习</code>。<strong>工作区</strong>就是你指定给 DSH 处理的文件夹，第一次用这个练习目录即可。</p>
+</li>
+<li>
+<p>Windows 打开「记事本」；Mac 打开「文本编辑」，在「格式」菜单选「制作纯文本」（已经是纯文本就跳过）。写下下面两行，用「文件 → 保存」存进 <code>DSH练习</code>，文件名填 <code>清单.txt</code>。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>已买：苹果、牛奶</span></span>
+<span class="line"><span>待买：鸡蛋、面包</span></span></code></pre>
+</li>
+<li>
+<p>回到 DSH，点「选择工作区」，添加并选中桌面上的 <code>DSH练习</code>。新建会话，选好模型，在聊天框输入「请读取这个文件夹里的清单.txt，只告诉我还有哪两样东西要买，不用修改文件」，点发送。</p>
+</li>
+<li>
+<p>如果出现读取文件的确认框，核对它指向刚才的练习目录再同意。回复中出现<strong>鸡蛋、面包</strong>，就完成了从连接模型到读取自己文件的第一次练习。下次从开始菜单或「应用程序」打开 DSH，选回这个工作区即可。</p>
+</li>
+</ol>
+<p><a id="安卓路线"></a></p>
+<h2 id="安卓下载安装-dsh-go">安卓：下载安装 DSH Go</h2>
+<h3 id="第一步下载-apk-并安装">第一步：下载 APK 并安装</h3>
+<p><strong>APK 是安卓的应用安装文件。</strong> 本机运行要求 Android 8.0 或以上，项目建议预留约 1 GB 空间。系统版本通常可以在手机「设置 → 关于手机」里查看。</p>
+<ol>
+<li>在手机浏览器打开项目下载页。常见的 64 位安卓手机选 <strong>Android arm64</strong>。如果改从 GitHub 下载，在发布页展开 <strong>Assets</strong>，点文件名含 <code>arm64</code>、以 <code>.apk</code> 结尾的那一项。<code>Source code</code> 是给开发者的源代码。<a href="https://go.dshtui.com/download">DSH Go 下载页</a> · <a href="https://github.com/ccch1mneyyy/dsh-Go/releases/latest">GitHub 安装包</a></li>
+<li>下载完成后点浏览器里的文件，或到手机「文件管理 → 下载」找到它。系统若询问是否允许当前浏览器或文件管理器安装应用，核对文件来源后按提示授权，再返回安装界面点「安装」。</li>
+<li>看到「安装完成」后点「打开」。第一次启动选择 <strong>本机</strong>。跟随引导安装运行环境，等待引擎启动。「引擎」是 App 里负责运行 DSH 的部分。之前跳过了引导，也可以到「设置 → 本机引擎」点「安装运行环境」。</li>
+</ol>
+<p><strong>检查点</strong>：打开「设置 → 本机引擎」，确认本机已启动并连接。第一次聊天无需开启无障碍或手机操控权限。<a href="https://github.com/ccch1mneyyy/dsh-Go/blob/d73c679c37b40466827e22a55b46f3e0c74ca7a1/docs/guide/zh/03-engine-hosts.md">项目的本机引擎指南</a></p>
+<h3 id="第二步选一个能用的模型">第二步：选一个能用的模型</h3>
+<ol>
+<li>打开 <strong>设置 → 模型</strong>。使用 DeepSeek 的读者，在「官方」分组里点 <strong>DeepSeek</strong>。选「用 DeepSeek 账号登录」并完成浏览器授权，或选「DeepSeek API Key」填入官方密钥。</li>
+<li>如果你使用 429ONE，改点 <strong>添加渠道</strong>，名称填 <code>429ONE</code>，Base URL 填 <code>https://api.429.one/v1</code>，API Key 填站点密钥。按站点说明选协议：Chat Completions 对应 <strong>OpenAI</strong>，Responses 对应 <strong>Responses</strong>。点「获取模型」，勾选一个可用模型并保存。若站点没返回列表，可点「手动添加」填入站点提供的完整模型 ID。<a href="/posts/relay-dsh-go/">429ONE 安卓逐项填写示例</a></li>
+<li>回到聊天页，打开左侧对话列表，点 <strong>新对话</strong>。点进输入框，再点输入框下方的模型名；也可以输入 <code>/model</code> 打开「选择模型」。先点刚才设置的渠道，再点一次它下面的<strong>具体模型</strong>。回到聊天页，确认显示的是你选中的模型名。</li>
+</ol>
+<h3 id="第三步在手机上收到第一条回复">第三步：在手机上收到第一条回复</h3>
+<p>把下面这句话整个复制进聊天框，点发送键：</p>
+<blockquote>
+<p>我的购物清单是：已买苹果、牛奶；待买鸡蛋、面包。请只列出还要买的两样东西。</p>
+</blockquote>
+<p>回复中应该有<strong>鸡蛋、面包</strong>。这一步说明手机已经能用选定的模型发出问题并收到回答。下次打开 DSH Go，回到「对话列表」就能找到这次练习；要换个话题，点「新对话」即可。<a href="https://github.com/ccch1mneyyy/dsh-Go/blob/d73c679c37b40466827e22a55b46f3e0c74ca7a1/docs/guide/zh/01-chat.md">DSH Go 对话指南</a></p>
+<h2 id="卡在哪一步就查哪一项">卡在哪一步，就查哪一项</h2>
+<table>
+<thead>
+<tr>
+<th>你看到什么</th>
+<th>接下来做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>电脑能打开，聊天框却不能输入</td>
+<td>回到主界面选中一个工作区，在新会话里选中具体模型，再点聊天框。</td>
+</tr>
+<tr>
+<td>电脑回答“找不到清单.txt”</td>
+<td>在资源管理器或访达打开练习文件夹，确认文件就在里面。检查是否存成了富文本或多了一层 <code>.txt</code> 后缀，再选一次工作区。</td>
+</tr>
+<tr>
+<td>手机上「添加渠道」不能点</td>
+<td>打开「设置 → 本机引擎」，看是否装好并连接。装好但已停止就点「启动」，等连接完成再返回。</td>
+</tr>
+<tr>
+<td>发送后提示 401、密钥无效</td>
+<td>回到模型设置，确认密钥填在签发它的渠道里，重新粘贴完整值并保存；再回到会话，重新选中该渠道下的模型。</td>
+</tr>
+<tr>
+<td>能列出模型，但发送时提示余额或额度不足</td>
+<td>登录该密钥所属平台查看账户额度。列出模型和实际生成回复是两次不同的请求，后者可能计费。</td>
+</tr>
+</tbody>
+</table>
+</div></article></main></body></html>
