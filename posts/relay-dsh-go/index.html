@@ -1,10 +1,17 @@
 <!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="在 DSH Go 启动本机引擎，添加 429ONE 渠道，选对协议和模型，用第一条回复验证接入。"><title>接入中转站 ⑤：在 Android 手机上的 DSH Go 里使用 429ONE · 429ONE Blog</title><style>:root{color-scheme:light;--ink:#173c3b;--leaf:#246959;--line:#c7d7cd}*{box-sizing:border-box}body{color:var(--ink);background:#fafaf5;margin:0;font:17px/1.85 "Source Sans 3",system-ui,sans-serif}header{border-bottom:1px solid var(--line);padding:16px max(6vw,50vw - 510px)}header a{white-space:nowrap;font:700 26px Georgia,serif;text-decoration:none;display:inline-block}main{max-width:910px;margin:clamp(36px,7vw,85px) auto;padding:0 24px}h1,h2,h3{text-wrap:balance;font-family:Georgia,Songti SC,Noto Serif CJK SC,serif;line-height:1.4}h1{letter-spacing:-.04em;margin:15px 0 22px;font-size:clamp(34px,6vw,60px)}a{color:var(--leaf);text-underline-offset:4px}a:hover{color:#102e2d}time,.meta{color:#536a62;font-size:.88rem}.tags{flex-wrap:wrap;gap:10px;display:flex}.tags a{background:#e7eee3;border-radius:3px;padding:2px 9px;font-size:.85rem;text-decoration:none}.entry{border-top:1px solid var(--line);padding:26px 0}.entry h2{margin:8px 0}.entry h2 a{color:var(--ink);text-decoration:none}.entry h2 a:hover{text-decoration:underline}article{overflow-wrap:anywhere;max-width:740px;margin:auto}article h1{font-size:clamp(30px,5vw,47px)}.body{border-top:1px solid var(--line);margin-top:32px;padding-top:12px}.body h2{margin:1.8em 0 .6em}.body pre,.body blockquote{border-radius:4px;margin:1em 0;padding:14px 20px}.body pre{overflow:auto}.body blockquote{border-left:3px solid var(--leaf);background:#e9efe5}blockquote p{margin:0}.body table{border-collapse:collapse;font-size:.94em;display:block;overflow:auto}th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:10px}img{max-width:100%;height:auto}
 </style></head><body><header><a href="/" aria-label="429ONE Blog 博客首页">429ONE Blog</a></header><main><article><a href="/">← 教程笔记</a><h1>接入中转站 ⑤：在 Android 手机上的 DSH Go 里使用 429ONE</h1><time datetime="2026-11-25">2026-11-25</time><div class="tags"><a href="/tags/%E4%B8%AD%E8%BD%AC%E7%AB%99%E6%8E%A5%E5%85%A5/">中转站接入</a><a href="/tags/DSH%20Go/">DSH Go</a></div><div class="body"><p>DSH Go 是社区开发的 DeepSeek Harness 手机客户端。想在 Android 手机上用 429ONE 聊天，可以让 DSH 引擎在手机上运行，再由它把模型请求发送到中转站。整个过程都可以在手机上完成。你需要一枚 <strong>429ONE 签发的 API Key</strong>，以及这枚 Key 可调用的模型 ID。<a href="https://github.com/ccch1mneyyy/dsh-Go">DSH Go 项目说明</a></p>
-<h2 id="1-在手机上启动本机引擎">1. 在手机上启动本机引擎</h2>
-<p>从项目发布页下载 APK。DSH Go 要求 Android 8.0 或以上，常见的 64 位安卓手机选 <strong>arm64</strong>。首次打开 App 时选择在本机运行，按提示安装内置运行环境，建议预留约 1 GB 空间。等引擎连接成功，再打开 <strong>设置 → 模型</strong>。<a href="https://github.com/ccch1mneyyy/dsh-Go/releases/latest">Android 安装包</a></p>
+<p>开始前，在手机浏览器登录 429ONE，准备好站点签发的密钥（API Key），并看一下账户可用的模型名称和接口说明。密钥是记账用的，等 App 询问 API Key 时只粘贴这串值。地址统一用 <code>https://api.429.one/v1</code>。<strong>手机上不用安装电脑终端，也不用先运行第一篇的命令。</strong> <a href="https://api.429.one/">站点入口</a></p>
+<h2 id="1-下载-apk打开手机里的-dsh-go">1. 下载 APK，打开手机里的 DSH Go</h2>
+<p>从项目发布页下载 APK。DSH Go 要求 Android 8.0 或以上，常见的 64 位安卓手机选 <strong>arm64</strong>。如果看到的是 GitHub 发布页，找到附件区 <strong>Assets</strong>（已折叠就点开），选择文件名含 <code>arm64</code> 且以 <code>.apk</code> 结尾的安装包。「Source code」是源代码，手机安装时应选 APK。下载后在浏览器的下载记录中点开文件；如果 Android 询问是否允许当前来源安装，核对文件来自项目发布页，再按系统提示完成安装。<a href="https://github.com/ccch1mneyyy/dsh-Go/releases/latest">Android 安装包</a></p>
+<h2 id="2-在手机上启动本机引擎">2. 在手机上启动本机引擎</h2>
+<ol>
+<li>打开刚安装的 DSH Go，首次设置选 <strong>本机</strong>。引擎是 App 用来启动对话、发送模型请求的程序。按引导安装运行环境，建议预留约 1 GB 空间。</li>
+<li>等待安装完成并自动启动。之前跳过这一步的读者，进入 <strong>设置 → 本机引擎 → 安装运行环境</strong>。若已安装但显示停止，点「启动」。</li>
+<li>确认本机引擎已连接，再打开 <strong>设置 → 模型</strong>。若添加按钮不能用，先回引擎页面看启动提示，不必反复重输 Key。<a href="https://github.com/ccch1mneyyy/dsh-Go/blob/d73c679c37b40466827e22a55b46f3e0c74ca7a1/docs/guide/zh/03-engine-hosts.md">项目文档：本机引擎</a></li>
+</ol>
 <p>这里有两个容易混淆的地址：<strong>远程主机</strong>用来连接另一台运行 DSH 的设备；<strong>模型渠道的 Base URL</strong> 才用来填写中转站地址。如果你本来就在用自己的远程 DSH，也可以继续使用，但接下来添加的渠道和密钥会保存在那台主机的引擎里。</p>
-<h2 id="2-添加-429one-渠道">2. 添加 429ONE 渠道</h2>
-<p>在 <strong>设置 → 模型 → 添加渠道</strong> 打开表单。假设你已经用某个模型成功请求过 <code>/v1/responses</code>，就按下表填写；如果之前测通的是 <code>/v1/chat/completions</code>，只需把「兼容协议」改选 <strong>OpenAI</strong>。还不确定协议时，可以先看<a href="/posts/relay-first-request/">第一篇的请求示例</a>。</p>
+<h2 id="3-添加-429one-渠道">3. 添加 429ONE 渠道</h2>
+<p>在 <strong>设置 → 模型 → 添加渠道</strong> 打开表单。「渠道」就是一份地址、密钥和模型的组合。看站点给你的模型说明：写着 <strong>Responses</strong> 就在 App 选 <strong>Responses</strong>；写着 <strong>Chat Completions</strong> 就选 <strong>OpenAI</strong>。如果没有说明，可以先用 <strong>Responses</strong> 测一条短消息；若返回路径不存在，再按文末的方法检查或改测另一种协议。</p>
 <table>
 <thead>
 <tr>
@@ -31,12 +38,13 @@
 </tr>
 </tbody>
 </table>
-<p>点 <strong>获取模型</strong>，勾选要用的模型。如果站点没有返回列表，点 <strong>手动添加</strong>，粘贴站点提供的完整模型 ID，保留大小写和前缀。至少添加一个模型，再点 <strong>保存</strong>。<a href="https://github.com/ccch1mneyyy/dsh-Go/blob/d73c679c37b40466827e22a55b46f3e0c74ca7a1/docs/guide/zh/02-models.md">项目文档：模型与渠道</a></p>
-<h2 id="3-在对话里选中模型发一条消息">3. 在对话里选中模型，发一条消息</h2>
+<p>填完密钥点 <strong>获取模型</strong>。列表出现后，勾选一个你有权限使用的文本模型，记下它显示的完整名称，稍后在聊天页找同一个名字。如果站点没有返回列表，点 <strong>手动添加</strong>，粘贴站点提供的完整模型 ID，保留大小写和前缀。至少添加一个模型，再点 <strong>保存</strong>。<a href="https://github.com/ccch1mneyyy/dsh-Go/blob/d73c679c37b40466827e22a55b46f3e0c74ca7a1/docs/guide/zh/02-models.md">项目文档：模型与渠道</a></p>
+<p>保存后，回「设置 → 模型」，在「自定义」一组找到 <strong>429ONE</strong>。点进去应该至少能看到一个模型。如果没有，点右上角铅笔编辑，补上模型后再次保存。</p>
+<h2 id="4-在对话里选中模型发一条消息">4. 在对话里选中模型，发一条消息</h2>
 <ol>
 <li>新建对话，在输入框输入 <code>/model</code> 打开「选择模型」。也可以点进手机输入框，再点下方显示的模型名称。</li>
 <li>在顶部选择 <strong>429ONE</strong>，再点一次下面的<strong>具体模型</strong>。只点渠道会筛选列表；点模型才会切换当前对话。</li>
-<li>发送「请只回复 OK」。收到回复后，按发送时间对照中转站的用量记录，确认这次请求用了自己的 Key。以后想换回原模型，再打开 <code>/model</code>，选回原渠道下的模型即可。<a href="https://github.com/ccch1mneyyy/dsh-Go/blob/d73c679c37b40466827e22a55b46f3e0c74ca7a1/docs/guide/zh/01-chat.md">项目文档：对话操作</a></li>
+<li>发送「请只回复 OK」。收到回复后，按发送时间对照中转站的用量记录，确认这次请求用了自己的 Key。如果你收到回复且用量记录能对上，这台手机就接好了，以后发消息不用再填一次密钥。以后想换回原模型，再打开 <code>/model</code>，选回原渠道下的模型即可。<a href="https://github.com/ccch1mneyyy/dsh-Go/blob/d73c679c37b40466827e22a55b46f3e0c74ca7a1/docs/guide/zh/01-chat.md">项目文档：对话操作</a></li>
 </ol>
 <h2 id="如果能看到渠道却收不到回复">如果能看到渠道，却收不到回复</h2>
 <ul>
