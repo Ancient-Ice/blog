@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="用自定义模型 API 填写基础地址、选择协议，验证工作区会话并恢复原模型。"><title>接入中转站 ④：在 DeepSeek Harness 网页版添加 429ONE 模型 · 429ONE Blog</title><style>:root{color-scheme:light;--ink:#173c3b;--leaf:#246959;--line:#c7d7cd}*{box-sizing:border-box}body{color:var(--ink);background:#fafaf5;margin:0;font:17px/1.85 "Source Sans 3",system-ui,sans-serif}header{border-bottom:1px solid var(--line);padding:16px max(6vw,50vw - 510px)}header a{white-space:nowrap;font:700 26px Georgia,serif;text-decoration:none;display:inline-block}main{max-width:910px;margin:clamp(36px,7vw,85px) auto;padding:0 24px}h1,h2,h3{text-wrap:balance;font-family:Georgia,Songti SC,Noto Serif CJK SC,serif;line-height:1.4}h1{letter-spacing:-.04em;margin:15px 0 22px;font-size:clamp(34px,6vw,60px)}a{color:var(--leaf);text-underline-offset:4px}a:hover{color:#102e2d}time,.meta{color:#536a62;font-size:.88rem}.tags{flex-wrap:wrap;gap:10px;display:flex}.tags a{background:#e7eee3;border-radius:3px;padding:2px 9px;font-size:.85rem;text-decoration:none}.entry{border-top:1px solid var(--line);padding:26px 0}.entry h2{margin:8px 0}.entry h2 a{color:var(--ink);text-decoration:none}.entry h2 a:hover{text-decoration:underline}article{overflow-wrap:anywhere;max-width:740px;margin:auto}article h1{font-size:clamp(30px,5vw,47px)}.body{border-top:1px solid var(--line);margin-top:32px;padding-top:12px}.body h2{margin:1.8em 0 .6em}.body pre,.body blockquote{border-radius:4px;margin:1em 0;padding:14px 20px}.body pre{overflow:auto}.body blockquote{border-left:3px solid var(--leaf);background:#e9efe5}blockquote p{margin:0}.body table{border-collapse:collapse;font-size:.94em;display:block;overflow:auto}th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:10px}img{max-width:100%;height:auto}
+</style></head><body><header><a href="/" aria-label="429ONE Blog 博客首页">429ONE Blog</a></header><main><article><a href="/">← 教程笔记</a><h1>接入中转站 ④：在 DeepSeek Harness 网页版添加 429ONE 模型</h1><time datetime="2026-11-25">2026-11-25</time><div class="tags"><a href="/tags/%E4%B8%AD%E8%BD%AC%E7%AB%99%E6%8E%A5%E5%85%A5/">中转站接入</a><a href="/tags/DeepSeek%20Harness/">DeepSeek Harness</a></div><div class="body"><p>如果你喜欢在浏览器里看对话和项目文件，可以直接在 DeepSeek Harness 的「设置 → 模型」添加 429ONE。准备好中转站密钥、一个可调用的模型 ID，以及它支持的协议。<a href="/posts/relay-first-request/">先确认模型和协议</a></p>
+<h2 id="在模型页填好一张卡片">在模型页填好一张卡片</h2>
+<p>在准备测试的项目目录里打开终端。如果已经安装 Harness，运行 <code>dsh web</code>；也可以在满足当前包版本要求的 Node.js 环境里运行 <code>npx @deepseek-ai/dsh web</code>。打开终端打印的本机地址，默认是 <code>http://127.0.0.1:3080</code>。<a href="https://github.com/deepseek-ai/DeepSeek-Harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/README.zh.md">Harness 安装说明</a></p>
+<p>打开 <strong>设置 → 模型 → 添加模型提供商 → 自定义模型 API</strong>。这里可以指定 429ONE 的地址；页面上单独的「DeepSeek API」密钥框留给 DeepSeek 官方服务。</p>
+<table>
+<thead>
+<tr>
+<th>表单字段</th>
+<th>示例或填写方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Provider ID / 显示名称</td>
+<td>ID 用小写 <code>relay429</code>，名称填 <code>429ONE</code>。会话会引用 ID，保存前先确认拼写</td>
+</tr>
+<tr>
+<td>基础 URL</td>
+<td><code>https://api.429.one/v1</code></td>
+</tr>
+<tr>
+<td>API 协议</td>
+<td>第一篇测通 <code>/responses</code> 就选 <strong>OpenAI Responses</strong>；测通 <code>/chat/completions</code> 就选 <strong>OpenAI Chat Completions</strong></td>
+</tr>
+<tr>
+<td>API 密钥</td>
+<td>粘贴 429ONE 为你签发的 Key</td>
+</tr>
+<tr>
+<td>模型目录</td>
+<td>点「获取可用模型」，勾选所需模型并更新列表；如果站点没有提供列表接口，手动添加已验证的完整模型 ID</td>
+</tr>
+</tbody>
+</table>
+<p>检查字段后保存。一个提供商条目对应一种协议；若两个模型分别使用不同协议，可以用不同的 Provider ID 创建两张卡。<a href="https://github.com/deepseek-ai/DeepSeek-Harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/user/guide/providers.zh.md">Harness 自定义模型配置说明</a></p>
+<h2 id="用一个文件验证工作区和模型">用一个文件验证工作区和模型</h2>
+<ol>
+<li>在测试目录里准备一个 <code>README.md</code>，第一行写一个好辨认的标题，例如 <code># 我的 429ONE 测试</code>。</li>
+<li>在 Harness 点「选择工作区」，添加并选中这个目录。新建会话，在模型选择器选 <strong>429ONE</strong> 下刚添加的模型。</li>
+<li>发送「只读取 README.md，原样返回第一行」。把结果和文件对照，再按时间核对中转站的用量记录。</li>
+</ol>
+<p>如果输入框不可用，先确认已选工作区和模型。如果能聊天但读不了文件，检查是否选错目录、是否有待确认的读取操作，以及当前模型是否支持工具调用。要换回原模型，开一个新会话，在选择器里选回之前的提供商和模型即可。<a href="https://github.com/deepseek-ai/DeepSeek-Harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/user/guide/index.zh.md">Harness 工作区指南</a></p>
+</div></article></main></body></html>

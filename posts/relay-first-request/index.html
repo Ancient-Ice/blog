@@ -1,0 +1,77 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="用 curl 测试 api.429.one 的模型列表和生成接口，再决定 Claude Code、Codex 或 Harness 该怎么填。"><title>接入中转站 ①：先用一个请求确认地址、密钥和模型 · 429ONE Blog</title><style>:root{color-scheme:light;--ink:#173c3b;--leaf:#246959;--line:#c7d7cd}*{box-sizing:border-box}body{color:var(--ink);background:#fafaf5;margin:0;font:17px/1.85 "Source Sans 3",system-ui,sans-serif}header{border-bottom:1px solid var(--line);padding:16px max(6vw,50vw - 510px)}header a{white-space:nowrap;font:700 26px Georgia,serif;text-decoration:none;display:inline-block}main{max-width:910px;margin:clamp(36px,7vw,85px) auto;padding:0 24px}h1,h2,h3{text-wrap:balance;font-family:Georgia,Songti SC,Noto Serif CJK SC,serif;line-height:1.4}h1{letter-spacing:-.04em;margin:15px 0 22px;font-size:clamp(34px,6vw,60px)}a{color:var(--leaf);text-underline-offset:4px}a:hover{color:#102e2d}time,.meta{color:#536a62;font-size:.88rem}.tags{flex-wrap:wrap;gap:10px;display:flex}.tags a{background:#e7eee3;border-radius:3px;padding:2px 9px;font-size:.85rem;text-decoration:none}.entry{border-top:1px solid var(--line);padding:26px 0}.entry h2{margin:8px 0}.entry h2 a{color:var(--ink);text-decoration:none}.entry h2 a:hover{text-decoration:underline}article{overflow-wrap:anywhere;max-width:740px;margin:auto}article h1{font-size:clamp(30px,5vw,47px)}.body{border-top:1px solid var(--line);margin-top:32px;padding-top:12px}.body h2{margin:1.8em 0 .6em}.body pre,.body blockquote{border-radius:4px;margin:1em 0;padding:14px 20px}.body pre{overflow:auto}.body blockquote{border-left:3px solid var(--leaf);background:#e9efe5}blockquote p{margin:0}.body table{border-collapse:collapse;font-size:.94em;display:block;overflow:auto}th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:10px}img{max-width:100%;height:auto}
+</style></head><body><header><a href="/" aria-label="429ONE Blog 博客首页">429ONE Blog</a></header><main><article><a href="/">← 教程笔记</a><h1>接入中转站 ①：先用一个请求确认地址、密钥和模型</h1><time datetime="2026-11-25">2026-11-25</time><div class="tags"><a href="/tags/%E4%B8%AD%E8%BD%AC%E7%AB%99%E6%8E%A5%E5%85%A5/">中转站接入</a></div><div class="body"><p>在客户端里同时填地址、密钥和模型名，遇到报错很难判断是哪一项出了问题。先在终端里让一个模型回复一次，再把同一套参数搬进客户端。你需要的是 <strong>429ONE 中转站签发的 API Key</strong>，以及这个 Key 有权调用的模型。基础地址是 <code>https://api.429.one/v1</code>。<a href="https://api.429.one/">中转站入口</a></p>
+<h2 id="第一步取一个真实的模型-id">第一步：取一个真实的模型 ID</h2>
+<p>以下命令适用于 <strong>Bash</strong>，macOS 可先运行 <code>bash</code>，Windows 可使用 Git Bash 或 WSL。需要 curl 和 Python 3（命令名为 <code>python3</code>）。在同一个终端逐段运行。输入密钥时屏幕不会显示字符，粘贴后按回车即可。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#E1E4E8">BASE</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">'https://api.429.one/v1'</span></span>
+<span class="line"><span style="color:#79B8FF">read</span><span style="color:#79B8FF"> -rsp</span><span style="color:#9ECBFF"> '429ONE API Key: '</span><span style="color:#9ECBFF"> RELAY_KEY</span></span>
+<span class="line"><span style="color:#79B8FF">printf</span><span style="color:#9ECBFF"> '\n'</span></span>
+<span class="line"><span style="color:#B392F0">curl</span><span style="color:#79B8FF"> -sS</span><span style="color:#79B8FF"> -w</span><span style="color:#9ECBFF"> '\nHTTP %{http_code}\n'</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$BASE</span><span style="color:#9ECBFF">/models"</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  -H</span><span style="color:#9ECBFF"> "Authorization: Bearer </span><span style="color:#E1E4E8">$RELAY_KEY</span><span style="color:#9ECBFF">"</span></span></code></pre>
+<p>如果得到 HTTP 200，在 JSON 的 <code>data</code> 数组中复制一个 <code>id</code>，保留大小写和前缀。如果模型列表接口返回 404，可从中转站给你的用模说明中复制模型 ID，继续测试生成接口。模型列表只说明账号能看到哪些名称，实际能否调用要看下一步。</p>
+<h2 id="第二步按客户端需要的协议发一条消息">第二步：按客户端需要的协议发一条消息</h2>
+<p>先输入刚才复制的模型 ID：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#79B8FF">read</span><span style="color:#79B8FF"> -rp</span><span style="color:#9ECBFF"> '模型 ID: '</span><span style="color:#9ECBFF"> RELAY_MODEL</span></span></code></pre>
+<p><strong>准备用 Codex CLI，先测 Responses。</strong> 这条命令会发送一个可能计费的短请求：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">python3</span><span style="color:#79B8FF"> -c</span><span style="color:#9ECBFF"> 'import json,sys; print(json.dumps({"model":sys.argv[1],"input":"请只回复 OK"}))'</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$RELAY_MODEL</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> |</span></span>
+<span class="line"><span style="color:#B392F0">  curl</span><span style="color:#79B8FF"> -sS</span><span style="color:#79B8FF"> -w</span><span style="color:#9ECBFF"> '\nHTTP %{http_code}\n'</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$BASE</span><span style="color:#9ECBFF">/responses"</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">    -H</span><span style="color:#9ECBFF"> "Authorization: Bearer </span><span style="color:#E1E4E8">$RELAY_KEY</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF"> -H</span><span style="color:#9ECBFF"> 'Content-Type: application/json'</span><span style="color:#79B8FF"> --data-binary</span><span style="color:#9ECBFF"> @-</span></span></code></pre>
+<p>预期结果是 HTTP 200，且 <code>output</code> 里有模型生成的文本。如果站点为你的模型提供的是 <strong>Chat Completions</strong>，改测下面这一条。它使用不同的路径和请求体：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">python3</span><span style="color:#79B8FF"> -c</span><span style="color:#9ECBFF"> 'import json,sys; print(json.dumps({"model":sys.argv[1],"messages":[{"role":"user","content":"请只回复 OK"}]}))'</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$RELAY_MODEL</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> |</span></span>
+<span class="line"><span style="color:#B392F0">  curl</span><span style="color:#79B8FF"> -sS</span><span style="color:#79B8FF"> -w</span><span style="color:#9ECBFF"> '\nHTTP %{http_code}\n'</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$BASE</span><span style="color:#9ECBFF">/chat/completions"</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">    -H</span><span style="color:#9ECBFF"> "Authorization: Bearer </span><span style="color:#E1E4E8">$RELAY_KEY</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF"> -H</span><span style="color:#9ECBFF"> 'Content-Type: application/json'</span><span style="color:#79B8FF"> --data-binary</span><span style="color:#9ECBFF"> @-</span></span></code></pre>
+<p>Chat Completions 成功时，回复通常在 <code>choices[0].message.content</code>。记下<strong>成功的协议和模型 ID</strong>。基础地址只填到 <code>/v1</code>；上面两条完整路径专供手动测试，客户端的「基础 URL」字段会自己拼接路径。</p>
+<table>
+<thead>
+<tr>
+<th>测试结果</th>
+<th>下一步</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>401 或 403</td>
+<td>查看错误正文，核对密钥、分组和模型权限。若响应来自公司代理或网关，先确认请求是否到达中转站。</td>
+</tr>
+<tr>
+<td>404、405 或返回 HTML</td>
+<td>检查 URL 是否重复了 <code>/v1</code>，以及当前模型开放的是哪种协议。</td>
+</tr>
+<tr>
+<td>提示模型不存在</td>
+<td>对照模型列表或站点说明，逐字核对 ID。</td>
+</tr>
+<tr>
+<td>429</td>
+<td>查看响应正文和站点额度，区分余额、并发限制与短时限流。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="第三步选一个客户端继续">第三步：选一个客户端继续</h2>
+<table>
+<thead>
+<tr>
+<th>你想用的工具</th>
+<th>配置入口</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>在终端用 Claude Code</td>
+<td><a href="/posts/relay-claude-code/">② 通过 CC Switch 转换协议</a></td>
+</tr>
+<tr>
+<td>在终端用 Codex CLI</td>
+<td><a href="/posts/relay-codex-cli/">③ 用自定义供应商接入 Responses</a></td>
+</tr>
+<tr>
+<td>在浏览器里用 DeepSeek Harness</td>
+<td><a href="/posts/relay-deepseek-harness/">④ 添加自定义模型 API</a></td>
+</tr>
+<tr>
+<td>在 Android 手机上用 DSH Go</td>
+<td><a href="/posts/relay-dsh-go/">⑤ 添加 429ONE 渠道</a></td>
+</tr>
+</tbody>
+</table>
+<p>测试结束可运行 <code>unset RELAY_KEY RELAY_MODEL BASE</code> 清理当前 Bash 会话的变量。分享排错信息时，只需保留路径、状态码和脱敏后的错误正文。</p>
+</div></article></main></body></html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="用 CC Switch 将 Claude Code 的请求转换成中转站支持的协议，配置模型映射，并验证实际用到的供应商。"><title>接入中转站 ②：在 Claude Code 中使用 429ONE · 429ONE Blog</title><style>:root{color-scheme:light;--ink:#173c3b;--leaf:#246959;--line:#c7d7cd}*{box-sizing:border-box}body{color:var(--ink);background:#fafaf5;margin:0;font:17px/1.85 "Source Sans 3",system-ui,sans-serif}header{border-bottom:1px solid var(--line);padding:16px max(6vw,50vw - 510px)}header a{white-space:nowrap;font:700 26px Georgia,serif;text-decoration:none;display:inline-block}main{max-width:910px;margin:clamp(36px,7vw,85px) auto;padding:0 24px}h1,h2,h3{text-wrap:balance;font-family:Georgia,Songti SC,Noto Serif CJK SC,serif;line-height:1.4}h1{letter-spacing:-.04em;margin:15px 0 22px;font-size:clamp(34px,6vw,60px)}a{color:var(--leaf);text-underline-offset:4px}a:hover{color:#102e2d}time,.meta{color:#536a62;font-size:.88rem}.tags{flex-wrap:wrap;gap:10px;display:flex}.tags a{background:#e7eee3;border-radius:3px;padding:2px 9px;font-size:.85rem;text-decoration:none}.entry{border-top:1px solid var(--line);padding:26px 0}.entry h2{margin:8px 0}.entry h2 a{color:var(--ink);text-decoration:none}.entry h2 a:hover{text-decoration:underline}article{overflow-wrap:anywhere;max-width:740px;margin:auto}article h1{font-size:clamp(30px,5vw,47px)}.body{border-top:1px solid var(--line);margin-top:32px;padding-top:12px}.body h2{margin:1.8em 0 .6em}.body pre,.body blockquote{border-radius:4px;margin:1em 0;padding:14px 20px}.body pre{overflow:auto}.body blockquote{border-left:3px solid var(--leaf);background:#e9efe5}blockquote p{margin:0}.body table{border-collapse:collapse;font-size:.94em;display:block;overflow:auto}th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:10px}img{max-width:100%;height:auto}
+</style></head><body><header><a href="/" aria-label="429ONE Blog 博客首页">429ONE Blog</a></header><main><article><a href="/">← 教程笔记</a><h1>接入中转站 ②：在 Claude Code 中使用 429ONE</h1><time datetime="2026-11-25">2026-11-25</time><div class="tags"><a href="/tags/%E4%B8%AD%E8%BD%AC%E7%AB%99%E6%8E%A5%E5%85%A5/">中转站接入</a><a href="/tags/Claude%20Code/">Claude Code</a><a href="/tags/CC%20Switch/">CC Switch</a></div><div class="body"><p>你可以保留 Claude Code 的终端界面，把请求交给中转站上有权限的模型处理。Claude Code 使用 Anthropic Messages；如果你在 429ONE 测通的是 OpenAI Responses 或 Chat Completions，就让本机的 CC Switch 转换协议。<strong>Claude Code 是这里的客户端，实际模型取决于你填写的上游模型 ID。</strong></p>
+<h2 id="建一张中转站卡片">建一张中转站卡片</h2>
+<p>先准备 CC Switch（下列名称按 v4.0.40 中文界面）、能运行 <code>claude --version</code> 的 Claude Code、站点密钥，以及已经测通的模型 ID 和协议。<a href="/posts/cc-switch-guide/">安装两个工具</a> · <a href="/posts/relay-first-request/">用一条请求确认协议</a></p>
+<p>在 CC Switch 左侧打开 <strong>Claude Code</strong>，点 <strong>＋</strong> 添加供应商，选「自定义」。按下表填写：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>填法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>名称</td>
+<td><code>429ONE</code>，便于在路由页识别</td>
+</tr>
+<tr>
+<td>端点地址</td>
+<td><code>https://api.429.one/v1</code>，使用基础地址，保持「完整 URL」关闭</td>
+</tr>
+<tr>
+<td>上游格式</td>
+<td>如果测通的是 <code>/responses</code>，选 <strong>OpenAI Responses API</strong>；若是 <code>/chat/completions</code>，选 <strong>OpenAI Chat Completions</strong></td>
+</tr>
+<tr>
+<td>API Key、认证字段</td>
+<td>填本站 Key。对于第一篇已验证的 Bearer 认证，选 <code>ANTHROPIC_AUTH_TOKEN</code>，让本地路由以 Bearer 方式转发</td>
+</tr>
+<tr>
+<td>模型</td>
+<td>在默认模型及本次会用到的角色映射（如 Sonnet、Haiku）中填已验证的上游 ID；首次测试可统一填同一个 ID</td>
+</tr>
+</tbody>
+</table>
+<h2 id="启动路由再发第一条消息">启动路由，再发第一条消息</h2>
+<ol>
+<li>保存卡片，在 Claude Code 页打开「路由」，点「开始路由」并确认。把路由目标选为 <strong>429ONE</strong>（卡片按钮为「路由到此」时点击它），确认卡片显示「路由中」。</li>
+<li>保持 CC Switch 运行。在一个测试目录新开终端，运行 <code>claude</code>，输入「只回复 OK」。</li>
+<li>检查回复，并按请求时间核对 CC Switch 的路由记录（需开启「记录请求用量」）或中转站的用量记录。要验证编程场景，可再让它「读一下 README 的第一行，不修改文件」，并与实际文件对照。普通文本成功、读文件失败时，优先检查该模型的工具调用与流式响应兼容性。</li>
+</ol>
+<p><strong>如果报模型不存在</strong>，看错误里出现的是哪个 ID。如果出现的是客户端默认的 Claude 模型名，回卡片补上对应角色的模型映射；如果已经是上游 ID，用相同 Key 和 ID 重跑第一篇的短请求。</p>
+<p><strong>恢复原配置</strong>时，回到 Claude Code 的「直连」页，点「回到直连」，再选之前使用的卡片，例如 <code>Claude Official</code>，重新打开 Claude Code。<a href="https://github.com/farion1231/cc-switch/blob/v4.0.40/docs/user-manual/zh/4-proxy/4.1-service.md">CC Switch 本地路由说明</a></p>
+</div></article></main></body></html>
